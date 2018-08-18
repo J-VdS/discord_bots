@@ -1,4 +1,4 @@
-﻿import discord
+import discord
 from discord.ext import commands
 
 with open('token.txt', 'r') as infile:
@@ -21,5 +21,9 @@ async def on_message(message):
     content = message.content
     if 'router' in content or 'splitter' in content:
         await client.add_reaction(message, emos['router'])
-    
+
+@client.event
+async def on_message_edit(before, after):
+    await on_message(after)
+   
 client.run(TOKEN)
