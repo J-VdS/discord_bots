@@ -20,7 +20,7 @@ async def on_ready():
         
 @client.event
 async def on_message(message):
-    content = message.content
+    content = message.content.lower()
     if 'router' in content or 'splitter' in content:
         await client.add_reaction(message, emos['router'])
     await client.process_commands(message)
