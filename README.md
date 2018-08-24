@@ -10,6 +10,11 @@
     * If somebody wrote a message containing 'router' or 'splitter' the bot reacts with a 'router' emoji.
     * The server owner can use the !clean command to delete some messages in a channel.
       These feature will only work if the second line of your token.txt file contains your name and id (name#xxxx).
+  * connect4 - bot:
+    * This bot makes it possible to play connect4 in python.
+    * commands: join, move <num>
+    * The use this bot, you need to download the PIL python library on your computer. 
+      
        
 ##### Ps: You will need to add token.txt in the same directory as your bot. The firs line needs to contain your TOKEN
    
