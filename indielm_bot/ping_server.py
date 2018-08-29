@@ -22,7 +22,7 @@ async def check(channel, client, servers, interval=300):
     while 1:
         for SERVER, OWNER in servers:
             if offline_msg[SERVER]:
-                await client.delete_message(offline_msg)
+                await client.delete_message(offline_msg[SERVER])
             if ping(socket.gethostbyname(SERVER), 6567):
                 offline_msg[SERVER] = await client.send_message(channel,SERVER +' online')
             else:

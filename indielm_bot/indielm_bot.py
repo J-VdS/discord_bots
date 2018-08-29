@@ -13,7 +13,7 @@ with open('token.txt', 'r') as infile:
 with open('servers.txt', 'r') as infile:
     #servername, ownerID
     SERVERS = [i.strip().split(', ') for i in infile.readlines()]
-print(SERVERS)
+print('servers:\n', SERVERS)
 
 client = commands.Bot(command_prefix = '!') 
 offline_msg = None
@@ -35,7 +35,7 @@ async def on_ready():
         channels[x.name] = x
     print('channels:',channels)
     
-    #await ping_server.check(channels[BOT_CHANNEL], client, SERVERS)
+    await ping_server.check(channels[BOT_CHANNEL], client, SERVERS)
         
 @client.event
 async def on_message(message):
