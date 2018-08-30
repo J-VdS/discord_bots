@@ -14,6 +14,7 @@ with open('servers.txt', 'r') as infile:
     #servername, ownerID
     SERVERS = [i.strip().split(', ') for i in infile.readlines()]
 print('servers:\n', SERVERS)
+print('Discord server data:')
 
 client = commands.Bot(command_prefix = '!') 
 offline_msg = None
@@ -25,15 +26,15 @@ async def isowner(ctx):
 
 @client.event
 async def on_ready():
-    print('Bot is ready')
-
     #gets all custom emojis
     for x in client.get_all_emojis():
         emos[x.name] = x
     print(emos)
+    #gets all the discord channels
     for x in client.get_all_channels():
         channels[x.name] = x
     print('channels:',channels)
+    print('Bot is ready')
     
     await ping_server.check(channels[BOT_CHANNEL], client, SERVERS)
         
@@ -64,6 +65,5 @@ async def clear(ctx, number=99):
 async def my_id(ctx):
     await client.say('Your discord id: %s' %(ctx.message.author.id))
     
-
 
 client.run(TOKEN)
