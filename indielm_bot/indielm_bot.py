@@ -135,6 +135,9 @@ async def changeLogin(ctx, login=None, password=None):
         await client.send_message(author, info)
     elif login==None or password==None:
         await client.say(info)
+    elif len(ctx.message.content.split(' ')) > 3:
+        await client.say('**Don\'t use spaces in your password or username**')
+        await client.say(info)
     else:
         succes = sqlite_mindustry.changeLogin(DB, author.id, login.lower(), password.lower())
         await client.say('Success!' if succes else 'Change login failed!')
