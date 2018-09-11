@@ -24,7 +24,8 @@ else:
     try:
         conn = sqlite3.connect(DB)
         c = conn.cursor()
-        c.execute('SELECT * FROM login WHERE login = ? AND password = ?', (login, password))
+        c.execute('SELECT * FROM login WHERE login = ? AND password = ?',
+                  (login.lower(), password.lower()))
         if len(c.fetchmany()):
             conn.execute('UPDATE login SET ip = ? WHERE login = ? AND password = ? ',
                          (ip, login, password))
@@ -32,7 +33,7 @@ else:
             conn.execute('UPDATE login SET uuid = ? WHERE login = ? AND password = ?',
                          (uuid, login, password))
             conn.commit()
-            print('loginSuccess ' + login)
+            print('loginSuccess ' + login.lower())
         else:
             print('loginFailed')
     finally:

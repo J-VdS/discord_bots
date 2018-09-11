@@ -20,7 +20,6 @@ def insert(db, discordid, login, password):
         conn.commit()
         succes = True
     except Exception as e:
-        print(e)
         succes = False
     finally:
         conn.close()
@@ -39,6 +38,7 @@ def check(db, discordid, login):
         c.close()
         conn.close()
         return num
+    
 
 def get_data(db, discordid):
     try:
@@ -62,12 +62,25 @@ def changeLogin(db, discordid, login, password):
         conn.commit()
         success = True
     except Exception as e:
-        print(e)
         success = False
     finally:
         conn.close()
         return success
+    
 
+def delete(db, discordid):
+    try:
+        conn = sqlite3.connect(db)
+        conn.execute('DELETE FROM login WHERE id=?', (discordid,))
+        conn.commit()
+        print('successfully deleted %s' %(discordid))
+        success = True
+    except:
+        success = False
+    finally:
+        conn.close()
+        return success
+        
 
 
 

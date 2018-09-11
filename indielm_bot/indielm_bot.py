@@ -81,6 +81,7 @@ async def signup(ctx, login=None, password=None):
     info = '''
     Press !signup followed by your username and password (in this chat).
 You are able to change them with !changeLogin and see them with !showLogin.
+**important:** The system isn't case sensitive.
     '''
     #channels safety
     ID = ctx.message.author.id
@@ -96,7 +97,7 @@ You are able to change them with !changeLogin and see them with !showLogin.
     elif sqlite_mindustry.check(DB, ID, login):
         await client.say('already in database!')
     else:
-        succes = sqlite_mindustry.insert(DB, ID, login, password)
+        succes = sqlite_mindustry.insert(DB, ID, login.lower(), password.lower())
         await client.say('Success!' if succes else 'Sign up failed!')
         
 
@@ -126,6 +127,7 @@ async def showLogin(ctx):
 async def changeLogin(ctx, login=None, password=None):
     info='''
     Press !changeLogin followed by your new username and new password (in this chat).
+**important:** The system isn't case sensitive.
     '''
     author = ctx.message.author
     if ctx.message.channel in channels.values():
@@ -134,8 +136,17 @@ async def changeLogin(ctx, login=None, password=None):
     elif login==None or password==None:
         await client.say(info)
     else:
-        succes = sqlite_mindustry.changeLogin(DB, author.id, login, password)
+        succes = sqlite_mindustry.changeLogin(DB, author.id, login.lower(), password.lower())
         await client.say('Success!' if succes else 'Change login failed!')
+
+
+@client.command(pass_context=True,
+                brief='->deletes your data from database')
+async def deleteLogin(ctx):
+    if ctx.message.channel in channels.values():
+        await client.delete_message(ctx.message)
+    succes = sqlite_mindustry.delete(DB, ctx.message.author.id)
+    await client.send_message(ctx.message.author, 'Data deleted' if succes else 'Failed')
     
 
 client.run(TOKEN)
