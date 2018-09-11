@@ -21,20 +21,21 @@ async def delete(client, msg):
 
 async def check(channel, client, servers, INTERVAL=300):
     #init offline_msg's
-    msg = {SERVER:None for SERVER, _ in servers} #make empty directory
-    count = {SERVER:0 for SERVER, _ in servers}  #make empty counter
+    msg = {SERVER:None for SERVER, _, _ in servers} #make empty directory
+    count = {SERVER:1 for SERVER, _, _ in servers}  #make empty counter
     interval = INTERVAL
     print('-- Ping sequence started --\n\n')
     while 1:
-        for SERVER, OWNER in servers:
+        for SERVER, OWNER, SERVERN in servers:
+            ping
             if ping(socket.gethostbyname(SERVER), 6567): 
                 if count[SERVER] != 0:
                     count[SERVER] = 0 #reset offline counter
                     if count.values == len(count)*[0]:
                         #if all the servers are online change inteval
                         interval= INTERVAL
-                await delete(client, msg[SERVER]) #deletes a msg if available
-                msg[SERVER] = await client.send_message(channel,SERVER +' online')
+                    await delete(client, msg[SERVER]) #deletes a msg if available
+                    msg[SERVER] = await client.send_message(channel, SERVERN +' went online')
             else:
                 #server offline -> ping every 30 seconds, 4 times in row
                 count[SERVER] += 1
@@ -42,6 +43,6 @@ async def check(channel, client, servers, INTERVAL=300):
                 if count[SERVER] == 4: #after 4 failed pings send offline message
                     await delete(client, msg[SERVER])
                     msg[SERVER] = await client.send_message(channel,
-                       '%s offline, <@%s>' %(SERVER, OWNER.strip()))
+                       '%s offline, <@%s>' %(SERVERN, OWNER.strip()))
         await asyncio.sleep(interval) #interval in seconds!
     
