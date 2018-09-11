@@ -11,6 +11,8 @@ with open('token.txt', 'r') as infile:
     OWNERID = data[1] #second line in token.txt
     BOT_CHANNEL = data[2]
     DB = data[3]
+    ROLE = data[4]
+    
 
 with open('servers.txt', 'r') as infile:
     #servername, ownerID
@@ -22,7 +24,6 @@ client = commands.Bot(command_prefix = '!')
 offline_msg = None
 emos = {}
 channels = {}
-
 
 async def isowner(ctx):
     return (ctx.message.author.id == OWNERID) 
@@ -45,6 +46,7 @@ async def on_ready():
         
 @client.event
 async def on_message(message):
+    print(message.content)
     content = message.content
     if 'router' in content or 'splitter' in content:
         await client.add_reaction(message, emos['router'])
@@ -98,13 +100,21 @@ You are able to change them with !changeLogin and see them with !showLogin.
         await client.say('already in database!')
     else:
         succes = sqlite_mindustry.insert(DB, ID, login.lower(), password.lower())
-        await client.say('Success!' if succes else 'Sign up failed!')
+        if succes:
+            msg = await client.send_message(channels[BOT_CHANNEL], 'succes add role')
+            member = discord.utils.get(msg.server.members, id=ID)
+            role = discord.utils.get(msg.server.roles, name=ROLE)
+            await client.add_roles(member, role)
+            await client.delete_message(msg)
+            await client.say('Success!')
+        else:
+            await client.say('Failed')
+            
         
-
 @client.command(pass_context=True,
                 brief='-> shows your username and login',
                 description='Press !showLogin in DM')
-async def showLogin(ctx):
+async def showlogin(ctx):
     author = ctx.message.author
     if ctx.message.channel in channels.values():
         await client.delete_message(ctx.message)
@@ -124,7 +134,7 @@ async def showLogin(ctx):
 @client.command(pass_context=True,
                 brief='-> change your username and password!',
                 description='Press !changeLogin in DM')
-async def changeLogin(ctx, login=None, password=None):
+async def changelogin(ctx, login=None, password=None):
     info='''
     Press !changeLogin followed by your new username and new password (in this chat).
 **important:** The system isn't case sensitive.
@@ -144,8 +154,8 @@ async def changeLogin(ctx, login=None, password=None):
 
 
 @client.command(pass_context=True,
-                brief='->deletes your data from database')
-async def deleteLogin(ctx):
+                brief='-> deletes your data from database')
+async def deletelogin(ctx):
     if ctx.message.channel in channels.values():
         await client.delete_message(ctx.message)
     succes = sqlite_mindustry.delete(DB, ctx.message.author.id)
