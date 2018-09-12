@@ -46,8 +46,7 @@ async def on_ready():
         
 @client.event
 async def on_message(message):
-    print(message.content)
-    content = message.content
+    content = message.content.lower()
     if 'router' in content or 'splitter' in content:
         await client.add_reaction(message, emos['router'])
     await client.process_commands(message)
@@ -82,7 +81,7 @@ async def my_id(ctx):
 async def signup(ctx, login=None, password=None):
     info = '''
     Press !signup followed by your username and password (in this chat).
-You are able to change them with !changeLogin and see them with !showLogin.
+You are able to change them with !changelogin and see them with !showllogin.
 **important:** The system isn't case sensitive.
     '''
     #channels safety
@@ -101,7 +100,7 @@ You are able to change them with !changeLogin and see them with !showLogin.
     else:
         succes = sqlite_mindustry.insert(DB, ID, login.lower(), password.lower())
         if succes:
-            msg = await client.send_message(channels[BOT_CHANNEL], 'succes add role')
+            msg = await client.send_message(channels[BOT_CHANNEL], 'success add role')
             member = discord.utils.get(msg.server.members, id=ID)
             role = discord.utils.get(msg.server.roles, name=ROLE)
             await client.add_roles(member, role)
@@ -113,7 +112,7 @@ You are able to change them with !changeLogin and see them with !showLogin.
         
 @client.command(pass_context=True,
                 brief='-> shows your username and login',
-                description='Press !showLogin in DM')
+                description='Press !showlogin in DM')
 async def showlogin(ctx):
     author = ctx.message.author
     if ctx.message.channel in channels.values():
@@ -133,10 +132,10 @@ async def showlogin(ctx):
 
 @client.command(pass_context=True,
                 brief='-> change your username and password!',
-                description='Press !changeLogin in DM')
+                description='Press !changelogin in DM')
 async def changelogin(ctx, login=None, password=None):
     info='''
-    Press !changeLogin followed by your new username and new password (in this chat).
+    Press !changelogin followed by your new username and new password (in this chat).
 **important:** The system isn't case sensitive.
     '''
     author = ctx.message.author
